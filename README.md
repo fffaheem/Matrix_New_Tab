@@ -14,12 +14,12 @@ A sleek Matrix-inspired new tab page for Chromium browsers featuring digital rai
 
 <tr>
 <td><img src="./Screenshots/Preview_Black.png" width="400"></td>
-<td><img src="./Screenshots/Preview_Blue.png" width="400"></td>
+<td><img src="./Screenshots/Preview_White.png" width="400"></td>
 </tr>
 
 <tr>
 <td><img src="./Screenshots/Preview_Green.png" width="400"></td>
-<td><img src="./Screenshots/Preview_Red.png" width="400"></td>
+<td><img src="./Screenshots/Preview_Blue.png" width="400"></td>
 </tr>
 </table>
 
