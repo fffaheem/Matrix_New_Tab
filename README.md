@@ -1,26 +1,25 @@
-# Matrix New Tab
+																																																# Matrix New Tab
 
 A sleek Matrix-inspired new tab page for Chromium browsers featuring digital rain effects, search functionality, and customizable bookmarks.
 
 <h2>Project Preview</h2>
 
-
 <div align="center">
 
 <table>
 <tr>
-<td align="center" valign="middle">
+<td><img src="./Screenshots/Preview.png" width="400"></td>
+<td><img src="./Screenshots/Preview_Pink.png" width="400"></td>
+</tr>
 
-<img src="./Screenshots/Preview.png" width="500"><br>
-<img src="./Screenshots/Preview_White.png" width="500">
+<tr>
+<td><img src="./Screenshots/Preview_Black.png" width="400"></td>
+<td><img src="./Screenshots/Preview_Blue.png" width="400"></td>
+</tr>
 
-</td>
-
-<td align="center" valign="middle">
-
-<img src="./Screenshots/Menu.png" width="450">
-
-</td>
+<tr>
+<td><img src="./Screenshots/Preview_Green.png" width="400"></td>
+<td><img src="./Screenshots/Preview_Red.png" width="400"></td>
 </tr>
 </table>
 
