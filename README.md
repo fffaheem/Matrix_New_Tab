@@ -2,7 +2,7 @@
 
 A sleek Matrix-inspired new tab page for Chromium browsers featuring digital rain effects, search functionality, and customizable bookmarks.
 
-<h2 align="center">Project Preview</h2>
+<h2>Project Preview</h2>
 
 <p align="center">
   <img src="./Screenshots/Preview.png" width="600">
