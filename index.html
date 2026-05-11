@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Interface</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="hamburger-menu">
+        <button id="menuToggle" class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="matrix-controls hidden" id="matrixControls">
+            <div class="control-group">
+                <label for="colorPicker">Theme:</label>
+                <input type="color" id="colorPicker" value="#00FF41">
+            </div>
+            <div class="control-group">
+                <label for="timeFormatToggle">Time Format:</label>
+                <div class="toggle-container">
+                    <input type="checkbox" id="timeFormatToggle">
+                    <label class="toggle-switch" for="timeFormatToggle">
+                        <span class="toggle-knob"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="secondsToggle">Show Seconds:</label>
+                <div class="toggle-container">
+                    <input type="checkbox" id="secondsToggle" checked>
+                    <label class="toggle-switch" for="secondsToggle">
+                        <span class="toggle-knob"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="speedSlider">Speed:</label>
+                <input type="range" id="speedSlider" min="1" max="20" value="5">
+                <span id="speedValue">5</span>
+            </div>
+            <div class="control-group">
+                <label for="fontSizeSlider">Rain Size:</label>
+                <input type="range" id="fontSizeSlider" min="10" max="30" value="16">
+                <span id="fontSizeValue">16</span>
+            </div>
+            <div class="control-group" style="justify-content: center; margin-top: 10px;">
+                <button id="resetSettingsBtn" class="add-bookmark-btn"
+                    style="width: 100%; border-style: solid; padding: 8px;">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="center-container">
+        <div id="digitalClock" class="digital-clock"></div>
+        <div class="brand-title">
+            <i class="fas fa-terminal logo-icon"></i>
+        </div>
+        <div class="search-container">
+            <div class="search-bar-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="passwordField" placeholder="Search the web or enter URL..." autocomplete="off">
+            </div>
+        </div>
+
+        <div class="bookmarks-container" id="bookmarksContainer">
+            <!-- Bookmarks injected by JS -->
+            <button id="addBookmarkBtn" class="add-bookmark-btn"><i class="fas fa-plus"></i> Add Bookmark</button>
+        </div>
+    </div>
+
+    <!-- Bookmark Modal -->
+    <div class="modal-overlay" id="bookmarkModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Add Bookmark</h3>
+            <input type="hidden" id="bookmarkId">
+            <input type="text" id="bookmarkName" placeholder="Bookmark Name" autocomplete="off">
+            <input type="text" id="bookmarkUrl" placeholder="URL (e.g. https://example.com)" autocomplete="off">
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelBookmarkBtn">Cancel</button>
+                <button class="btn-save" id="saveBookmarkBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./script.js"></script>
+
+</html>
