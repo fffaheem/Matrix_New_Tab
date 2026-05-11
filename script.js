@@ -66,10 +66,12 @@ fontSizeValueSpan.textContent = fontSize;
 // --- Control Event Listeners ---
 colorPicker.addEventListener('input', (event) => {
     updateThemeColors(event.target.value);
+    updateFavicon(event.target.value);
 });
 colorPicker.addEventListener('change', (event) => {
     settings.themeColor = event.target.value;
     saveSettingsToStorage();
+    updateFavicon(event.target.value);
 });
 
 speedSlider.addEventListener('input', (event) => {
@@ -269,6 +271,45 @@ function saveBookmarksToStorage() {
     }
 }
 
+function updateFavicon(color) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, 32, 32);
+    
+    // Draw the terminal icon
+    ctx.fillStyle = color;
+    ctx.font = '900 24px "Font Awesome 6 Free"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('\uf120', 16, 16); // \uf120 is fa-terminal
+    
+    // Update Tab Favicon
+    const dataUrl = canvas.toDataURL('image/png');
+    let link = document.getElementById('dynamic-favicon');
+    if (!link) {
+        link = document.createElement('link');
+        link.id = 'dynamic-favicon';
+        link.rel = 'icon';
+        link.type = 'image/png';
+        document.head.appendChild(link);
+    }
+    link.href = dataUrl;
+    
+    // Update Extension Icon
+    if (typeof chrome !== 'undefined' && chrome.action && chrome.action.setIcon) {
+        try {
+            const imageData = ctx.getImageData(0, 0, 32, 32);
+            chrome.action.setIcon({ imageData: imageData });
+        } catch (e) {
+            console.error('Could not set extension icon', e);
+        }
+    }
+}
+
 function applySettings() {
     animationSpeed = settings.animationSpeed;
     fontSize = settings.fontSize;
@@ -278,6 +319,13 @@ function applySettings() {
     // Update UI controls
     colorPicker.value = settings.themeColor;
     updateThemeColors(settings.themeColor);
+    
+    // Wait for fonts to load before drawing favicon
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => updateFavicon(settings.themeColor));
+    } else {
+        updateFavicon(settings.themeColor);
+    }
 
     speedSlider.value = settings.animationSpeed;
     speedValueSpan.textContent = settings.animationSpeed;
