@@ -4,11 +4,27 @@ A sleek Matrix-inspired new tab page for Chromium browsers featuring digital rai
 
 <h2>Project Preview</h2>
 
-<p align="center">
-  <img src="./Screenshots/Preview.png" width="32%">
-  <img src="./Screenshots/Menu.png" width="32%">
-  <img src="./Screenshots/Preview_White.png" width="32%">
-</p>
+
+<div align="center">
+
+<table>
+<tr>
+<td align="center" valign="middle">
+
+<img src="./Screenshots/Preview.png" width="500"><br>
+<img src="./Screenshots/Preview_White.png" width="500">
+
+</td>
+
+<td align="center" valign="middle">
+
+<img src="./Screenshots/Menu.png" width="450">
+
+</td>
+</tr>
+</table>
+
+</div>
 
 ## Features
 
