@@ -1,4 +1,4 @@
-																																																# Matrix New Tab
+# Matrix New Tab
 
 A sleek Matrix-inspired new tab page for Chromium browsers featuring digital rain effects, search functionality, and customizable bookmarks.
 
