@@ -1,5 +1,7 @@
 :root {
     --theme-color: #00FF41;
+    --bg-color: #000000;
+    --bg-color-rgb: 0, 0, 0;
     /* Default Matrix green, will be updated by JS */
     --ui-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -7,7 +9,7 @@
 body {
     margin: 0;
     overflow: hidden;
-    background-color: #000;
+    background-color: var(--bg-color);
     font-family: 'Courier New', Courier, monospace;
     color: #fff;
     display: flex;
@@ -50,8 +52,8 @@ canvas {
 }
 
 .menu-toggle:hover {
-    background-color: var(--theme-color);
-    color: #000;
+    background-color: var(--bg-color);
+    color: var(--theme-color);
     box-shadow: 0 0 10px rgba(var(--theme-color-rgb), 0.7);
 }
 
@@ -60,7 +62,7 @@ canvas {
 }
 
 .matrix-controls {
-    background-color: rgba(30, 30, 30, 0.85);
+    background-color: rgba(var(--bg-color-rgb), 0.85);
     padding: 15px;
     border-radius: 8px;
     margin-top: 10px;
@@ -84,11 +86,12 @@ canvas {
     gap: 10px;
     font-family: var(--ui-font);
     font-size: 0.9em;
+    color: var(--theme-color);
 }
 
 .control-group>label {
     min-width: 90px;
-    color: #ccc;
+    color: var(--theme-color);
 }
 
 .control-group input[type="range"] {
@@ -173,7 +176,7 @@ input[type="checkbox"] {
     font-family: 'Orbitron', sans-serif;
     font-size: 2em;
     color: var(--theme-color);
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(var(--bg-color-rgb), 0.6);
     padding: 15px 25px;
     border-radius: 8px;
     border: 1px solid rgba(var(--theme-color-rgb), 0.5);
@@ -247,10 +250,10 @@ input[type="checkbox"] {
 #passwordField {
     width: 100%;
     padding: 18px 20px 18px 55px;
-    background-color: rgba(10, 10, 10, 0.85);
+    background-color: rgba(var(--bg-color-rgb), 0.85);
     border: 1px solid rgba(var(--theme-color-rgb), 0.4);
     border-radius: 30px;
-    color: #fff;
+    color: var(--theme-color);
     font-size: 1.1em;
     font-family: var(--ui-font);
     box-sizing: border-box;
@@ -259,14 +262,15 @@ input[type="checkbox"] {
 }
 
 #passwordField::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--theme-color);
+    opacity: 0.5;
 }
 
 #passwordField:focus {
     outline: none;
     border-color: var(--theme-color);
     box-shadow: 0 0 25px rgba(var(--theme-color-rgb), 0.4);
-    background-color: rgba(10, 10, 10, 0.95);
+    background-color: rgba(var(--bg-color-rgb), 0.95);
 }
 
 .top-right-controls {
@@ -318,7 +322,7 @@ input[type="checkbox"] {
 }
 
 .bookmark-item {
-    background-color: rgba(10, 10, 10, 0.8);
+    background-color: rgba(var(--bg-color-rgb), 0.8);
     border: 1px solid rgba(var(--theme-color-rgb), 0.4);
     padding: 10px 15px;
     border-radius: 8px;
@@ -401,7 +405,7 @@ input[type="checkbox"] {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(var(--bg-color-rgb), 0.8);
     display: none;
     justify-content: center;
     align-items: center;
@@ -416,7 +420,7 @@ input[type="checkbox"] {
 }
 
 .modal-content {
-    background-color: rgba(10, 10, 10, 0.95);
+    background-color: rgba(var(--bg-color-rgb), 0.95);
     padding: 30px;
     border-radius: 12px;
     border: 1px solid var(--theme-color);
@@ -444,10 +448,10 @@ input[type="checkbox"] {
 .modal-content input {
     width: 100%;
     padding: 12px 15px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(var(--bg-color-rgb), 0.5);
     border: 1px solid rgba(var(--theme-color-rgb), 0.5);
     border-radius: 6px;
-    color: #fff;
+    color: var(--theme-color);
     font-family: var(--ui-font);
     box-sizing: border-box;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;

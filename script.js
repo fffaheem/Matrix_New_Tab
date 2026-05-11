@@ -8,6 +8,8 @@ const matrixControls = document.getElementById('matrixControls');
 const searchField = document.getElementById('passwordField');
 let is24HourFormat = true; // Default to 24-hour format
 let showSeconds = true; // Default to showing seconds
+let frameCount = 0;
+
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -47,9 +49,20 @@ function updateThemeColors(newColor) {
     document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(uiThemeColor));
 }
 
+let bgColor = '#000000';
+let bgColorRGB = '0, 0, 0';
+
+function updateBackgroundColor(newColor) {
+    bgColor = newColor;
+    bgColorRGB = hexToRgb(newColor);
+    document.documentElement.style.setProperty('--bg-color', newColor);
+    document.documentElement.style.setProperty('--bg-color-rgb', bgColorRGB);
+}
+
 
 // --- Control Elements ---
 const colorPicker = document.getElementById('colorPicker');
+const bgColorPicker = document.getElementById('bgColorPicker');
 const speedSlider = document.getElementById('speedSlider');
 const fontSizeSlider = document.getElementById('fontSizeSlider');
 const speedValueSpan = document.getElementById('speedValue');
@@ -57,6 +70,9 @@ const fontSizeValueSpan = document.getElementById('fontSizeValue');
 
 // --- Initialize Controls and Theme ---
 updateThemeColors(colorPicker.value); // Initialize theme with picker's default value
+if (bgColorPicker) {
+    updateBackgroundColor(bgColorPicker.value);
+}
 speedSlider.value = animationSpeed;
 speedValueSpan.textContent = animationSpeed;
 fontSizeSlider.value = fontSize;
@@ -73,6 +89,16 @@ colorPicker.addEventListener('change', (event) => {
     saveSettingsToStorage();
     updateFavicon(event.target.value);
 });
+
+if (bgColorPicker) {
+    bgColorPicker.addEventListener('input', (event) => {
+        updateBackgroundColor(event.target.value);
+    });
+    bgColorPicker.addEventListener('change', (event) => {
+        settings.backgroundColor = event.target.value;
+        saveSettingsToStorage();
+    });
+}
 
 speedSlider.addEventListener('input', (event) => {
     animationSpeed = parseInt(event.target.value, 10);
@@ -105,10 +131,9 @@ if (resetSettingsBtn) {
     });
 }
 
-let frameCount = 0;
 
 function drawMatrix() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fading effect
+    ctx.fillStyle = `rgba(${bgColorRGB}, 0.05)`; // Fading effect using dynamic background color
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = rainColor; // Use the dynamic rain color
@@ -247,6 +272,7 @@ let bookmarks = [];
 
 const defaultSettings = {
     themeColor: '#00FF41',
+    backgroundColor: '#000000',
     animationSpeed: 18,
     fontSize: 20,
     is24HourFormat: true,
@@ -319,6 +345,11 @@ function applySettings() {
     // Update UI controls
     colorPicker.value = settings.themeColor;
     updateThemeColors(settings.themeColor);
+
+    if (bgColorPicker) {
+        bgColorPicker.value = settings.backgroundColor || '#000000';
+        updateBackgroundColor(bgColorPicker.value);
+    }
     
     // Wait for fonts to load before drawing favicon
     if (document.fonts && document.fonts.ready) {
