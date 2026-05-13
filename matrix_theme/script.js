@@ -10,6 +10,14 @@ let is24HourFormat = true; // Default to 24-hour format
 let showSeconds = true; // Default to showing seconds
 let frameCount = 0;
 
+let bookmarks = [];
+
+let custom_default =
+[
+    { id: '1', name: 'Google', url: 'https://google.com' },
+    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
+];
+
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -131,54 +139,34 @@ if (resetSettingsBtn) {
     });
 }
 
-let history = {};
-let count = {};
-let max_history = 3;
 function drawMatrix() {
-    ctx.fillStyle = `rgba(${bgColorRGB}, 0.05)`; // Fading effect using dynamic background color
+    ctx.fillStyle = `rgba(${bgColorRGB}, 0.05)`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = rainColor; // Use the dynamic rain color
     ctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
 
     for (let i = 0; i < drops.length; i++) {
-        const text = charArray[Math.floor(Math.random() * charArray.length)];
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
 
-      if (!history[i * fontSize]) {
-        history[i * fontSize] = []
-      } else {
-        history[i * fontSize].push(drops[i] * fontSize);
-      }
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-          if (!count[i * fontSize]) {
-            count[i * fontSize] = 1;
-          } else {
-            count[i * fontSize] += 1;
-          }
+        ctx.fillStyle = `rgba(${bgColorRGB}, 0.7)`;
+        ctx.fillRect(x, y, fontSize, fontSize);
 
-          // After 5 resets erase the whole column
-          if (count[i * fontSize] >= max_history) {
+        if (y >= 0) {
+            ctx.fillStyle = rainColor;
+            const text = charArray[Math.floor(Math.random() * charArray.length)];
+            ctx.fillText(text, x, y);
+        }
 
-              // Paint over old characters
-              ctx.fillStyle = `rgb(${bgColorRGB})`;
-
-              for (const oldY of history[i * fontSize]) {
-                  ctx.fillRect(i * fontSize, oldY - fontSize, fontSize, fontSize);
-              }
-
-              // Clear stored history
-              history[i * fontSize] = [];
-
-              count[i * fontSize] = 0;
-          }
-
-
+        if (y > canvas.height) {
+            if (Math.random() > 0.975) {
+                drops[i] = -Math.floor(Math.random() * 10);
+            }
         }
         drops[i]++;
     }
 }
+
 
 function animate() {
     frameCount++;
@@ -297,14 +285,6 @@ const bookmarkIdInput = document.getElementById('bookmarkId');
 const bookmarkNameInput = document.getElementById('bookmarkName');
 const bookmarkUrlInput = document.getElementById('bookmarkUrl');
 const modalTitle = document.getElementById('modalTitle');
-
-let bookmarks = [];
-
-let custom_default =
-[
-    { id: '1', name: 'Google', url: 'https://google.com' },
-    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
-];
 
 const defaultSettings = {
     themeColor: '#00FF41',
