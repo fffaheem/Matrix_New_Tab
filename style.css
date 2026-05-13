@@ -167,7 +167,8 @@ input[type="checkbox"] {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    /*gap: 30px;*/
+    gap: 1rem;
     /* Gap between clock and login */
     z-index: 10;
 }
@@ -199,7 +200,7 @@ input[type="checkbox"] {
 }
 
 .date-string {
-    font-size: 0.4em;
+    font-size: 0.625em;
     font-family: var(--ui-font);
     font-weight: 300;
     letter-spacing: 1px;
