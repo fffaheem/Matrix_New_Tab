@@ -114,7 +114,7 @@ fontSizeSlider.addEventListener('input', (event) => {
     fontSizeValueSpan.textContent = fontSize;
     columns = Math.floor(canvas.width / fontSize);
     drops = Array(columns).fill(1);
-    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 });
 fontSizeSlider.addEventListener('change', (event) => {
@@ -164,7 +164,7 @@ window.addEventListener('resize', () => {
     columns = Math.floor(canvas.width / fontSize);
     drops = Array(columns).fill(1);
     if (ctx) { // Ensure ctx is available
-        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 });
@@ -375,7 +375,7 @@ function applySettings() {
 
     columns = Math.floor(canvas.width / fontSize);
     drops = Array(columns).fill(1);
-    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     updateClock();
