@@ -24,7 +24,7 @@ let animationSpeed = 18;
 const characters = `123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_-+=/?.,<>~ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ`;
 const charArray = characters.split('');
 
-let columns = Math.floor(canvas.width / fontSize);
+let columns = Math.ceil(canvas.width / fontSize);
 let drops = Array(columns).fill(1);
 
 // --- Helper to convert hex to RGB for CSS variables with opacity ---
@@ -112,7 +112,7 @@ speedSlider.addEventListener('change', (event) => {
 fontSizeSlider.addEventListener('input', (event) => {
     fontSize = parseInt(event.target.value, 10);
     fontSizeValueSpan.textContent = fontSize;
-    columns = Math.floor(canvas.width / fontSize);
+    columns = Math.ceil(canvas.width / fontSize);
     drops = Array(columns).fill(1);
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -161,7 +161,7 @@ function animate() {
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    columns = Math.floor(canvas.width / fontSize);
+    columns = Math.ceil(canvas.width / fontSize);
     drops = Array(columns).fill(1);
     if (ctx) { // Ensure ctx is available
         ctx.fillStyle = bgColor;
@@ -373,7 +373,7 @@ function applySettings() {
     timeFormatToggle.checked = !settings.is24HourFormat;
     secondsToggle.checked = settings.showSeconds;
 
-    columns = Math.floor(canvas.width / fontSize);
+    columns = Math.ceil(canvas.width / fontSize);
     drops = Array(columns).fill(1);
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
