@@ -131,7 +131,9 @@ if (resetSettingsBtn) {
     });
 }
 
-
+let history = {};
+let count = {};
+let max_history = 3;
 function drawMatrix() {
     ctx.fillStyle = `rgba(${bgColorRGB}, 0.05)`; // Fading effect using dynamic background color
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -141,10 +143,38 @@ function drawMatrix() {
 
     for (let i = 0; i < drops.length; i++) {
         const text = charArray[Math.floor(Math.random() * charArray.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
+      if (!history[i * fontSize]) {
+        history[i * fontSize] = []
+      } else {
+        history[i * fontSize].push(drops[i] * fontSize);
+      }
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-            drops[i] = 0;
+          drops[i] = 0;
+          if (!count[i * fontSize]) {
+            count[i * fontSize] = 1;
+          } else {
+            count[i * fontSize] += 1;
+          }
+
+          // After 5 resets erase the whole column
+          if (count[i * fontSize] >= max_history) {
+
+              // Paint over old characters
+              ctx.fillStyle = `rgb(${bgColorRGB})`;
+
+              for (const oldY of history[i * fontSize]) {
+                  ctx.fillRect(i * fontSize, oldY - fontSize, fontSize, fontSize);
+              }
+
+              // Clear stored history
+              history[i * fontSize] = [];
+
+              count[i * fontSize] = 0;
+          }
+
+
         }
         drops[i]++;
     }
