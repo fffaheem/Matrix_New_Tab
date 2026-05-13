@@ -270,6 +270,12 @@ const modalTitle = document.getElementById('modalTitle');
 
 let bookmarks = [];
 
+let custom_default =
+[
+    { id: '1', name: 'Google', url: 'https://google.com' },
+    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
+];
+
 const defaultSettings = {
     themeColor: '#00FF41',
     backgroundColor: '#000000',
@@ -302,17 +308,17 @@ function updateFavicon(color) {
     canvas.width = 32;
     canvas.height = 32;
     const ctx = canvas.getContext('2d');
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, 32, 32);
-    
+
     // Draw the terminal icon
     ctx.fillStyle = color;
     ctx.font = '900 24px "Font Awesome 6 Free"';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('\uf120', 16, 16); // \uf120 is fa-terminal
-    
+
     // Update Tab Favicon
     const dataUrl = canvas.toDataURL('image/png');
     let link = document.getElementById('dynamic-favicon');
@@ -324,7 +330,7 @@ function updateFavicon(color) {
         document.head.appendChild(link);
     }
     link.href = dataUrl;
-    
+
     // Update Extension Icon
     if (typeof chrome !== 'undefined' && chrome.action && chrome.action.setIcon) {
         try {
@@ -350,7 +356,7 @@ function applySettings() {
         bgColorPicker.value = settings.backgroundColor || '#000000';
         updateBackgroundColor(bgColorPicker.value);
     }
-    
+
     // Wait for fonts to load before drawing favicon
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => updateFavicon(settings.themeColor));
@@ -381,10 +387,7 @@ function loadDataFromStorage(callback) {
             if (result.matrix_bookmarks) {
                 bookmarks = result.matrix_bookmarks;
             } else {
-                bookmarks = [
-                    { id: '1', name: 'Google', url: 'https://google.com' },
-                    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
-                ];
+              bookmarks = custom_default;
             }
             if (result.matrix_settings) {
                 settings = result.matrix_settings;
@@ -392,10 +395,7 @@ function loadDataFromStorage(callback) {
             callback();
         });
     } else {
-        bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || [
-            { id: '1', name: 'Google', url: 'https://google.com' },
-            { id: '2', name: 'YouTube', url: 'https://youtube.com' }
-        ];
+      bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
         const savedSettings = JSON.parse(localStorage.getItem('matrix_settings'));
         if (savedSettings) {
             settings = savedSettings;
