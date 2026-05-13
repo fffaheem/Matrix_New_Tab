@@ -138,6 +138,6 @@ let custom_default =
 
 <div>
 
-Made by Mohd Faheem Ahmad
+Developed by Mohammad Faheem Ahmad
 
 </div>
