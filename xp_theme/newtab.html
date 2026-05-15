@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>New Tab</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div id="desktop" class="desktop">
+            <div class="xp-search-container">
+                <div class="xp-search-box">
+                    <div class="xp-search-title">Search the Web</div>
+                    <div class="xp-search-inner">
+                        <label for="search-input"
+                            >Type a search term or web address:</label
+                        >
+                        <div class="xp-search-input-row">
+                            <input
+                                type="text"
+                                id="search-input"
+                                placeholder="Search the web..."
+                                autocomplete="off"
+                            />
+                            <button id="search-btn">Search</button>
+                        </div>
+                        <div class="xp-search-extra">
+                            <button id="add-shortcut-btn" class="xp-btn-subtle">
+                                + Add Shortcut
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shortcut-grid" class="shortcut-grid"></div>
+
+            <div id="start-menu" class="start-menu hidden">
+                <div class="start-header">
+                    <img
+                        src="assets/images/icons/windows-xp-logo.png"
+                        class="user-icon"
+                        alt="User"
+                    />
+                    <span class="user-name">Guest</span>
+                </div>
+                <div class="start-body">
+                    <div class="start-left">
+                        <div id="frequent-sites" class="frequent-sites-list">
+                            <div id="start-ie" class="start-item">
+                                <img
+                                    src="assets/images/icons/internet-explorer-icon.svg"
+                                    alt=""
+                                />
+                                <div class="start-text-group">
+                                    <span class="start-item-title"
+                                        >Internet</span
+                                    >
+                                    <span class="start-item-desc"
+                                        >Google Search</span
+                                    >
+                                </div>
+                            </div>
+                            <div id="start-mail" class="start-item">
+                                <img
+                                    src="assets/images/icons/mail-icon.webp"
+                                    alt=""
+                                />
+                                <div class="start-text-group">
+                                    <span class="start-item-title">E-mail</span>
+                                    <span class="start-item-desc">Gmail</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="start-separator"></div>
+
+                        <div id="start-notepad" class="start-item-small">
+                            <img
+                                src="assets/images/icons/notepad-icon.webp"
+                                alt=""
+                            />
+                            <span>Notepad</span>
+                        </div>
+                        <div id="start-task-manager" class="start-item-small">
+                            <img
+                                src="assets/images/icons/task-manager-logo.svg"
+                                alt=""
+                            />
+                            <span>Task Manager</span>
+                        </div>
+                        <div class="start-spacer"></div>
+                        <div class="all-programs-btn">
+                            All Programs
+                            <span class="all-programs-arrow"></span>
+                        </div>
+                    </div>
+
+                    <div class="start-right">
+                        <div id="start-my-computer" class="start-item-right">
+                            <img
+                                src="assets/images/icons/my-computer-icon.webp"
+                                alt=""
+                            />
+                            <span>My Computer</span>
+                        </div>
+                        <div id="start-my-docs" class="start-item-right">
+                            <img
+                                src="assets/images/icons/my-documents-icon.webp"
+                                alt=""
+                            />
+                            <span>My Documents</span>
+                        </div>
+                        <div id="start-my-recent" class="start-item-right">
+                            <img
+                                src="assets/images/icons/my-documents-icon.webp"
+                                alt=""
+                            />
+                            <span>Recent Documents</span>
+                        </div>
+                        <div id="start-my-pics" class="start-item-right">
+                            <img
+                                src="assets/images/icons/my-pictures-icon.webp"
+                                alt=""
+                            />
+                            <span>My Pictures</span>
+                        </div>
+                        <div id="start-my-music" class="start-item-right">
+                            <img
+                                src="assets/images/icons/my-music-icon.webp"
+                                alt=""
+                            />
+                            <span>My Music</span>
+                        </div>
+
+                        <div class="start-separator-right"></div>
+
+                        <div id="start-control-panel" class="start-item-right">
+                            <img
+                                src="assets/images/icons/control-panel-icon.webp"
+                                alt=""
+                            />
+                            <span>Control Panel</span>
+                        </div>
+
+                        <div class="start-separator-right"></div>
+
+                        <div id="start-search" class="start-item-right">
+                            <img
+                                src="assets/images/icons/search-icon.webp"
+                                alt=""
+                            />
+                            <span>Search</span>
+                        </div>
+                        <div id="start-run" class="start-item-right">
+                            <img
+                                src="assets/images/icons/run-icon.webp"
+                                alt=""
+                            />
+                            <span>Run...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-footer"></div>
+            </div>
+
+            <div
+                id="shortcut-modal"
+                class="xp-window hidden"
+                style="width: 360px"
+            >
+                <div class="win-titlebar">
+                    <span>Add Shortcut</span>
+                    <div class="win-controls">
+                        <button class="win-btn btn-close" type="button">
+                            X
+                        </button>
+                    </div>
+                </div>
+                <div class="win-content">
+                    <div class="field">
+                        <label for="shortcut-name">Name:</label>
+                        <input
+                            id="shortcut-name"
+                            type="text"
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="shortcut-url">URL:</label>
+                        <input
+                            id="shortcut-url"
+                            type="text"
+                            placeholder="https://example.com"
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="win-actions">
+                        <button
+                            id="shortcut-cancel"
+                            class="xp-btn"
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+                        <button id="shortcut-ok" class="xp-btn" type="button">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                id="taskmgr-window"
+                class="xp-window hidden"
+                style="width: 400px"
+            >
+                <div class="win-titlebar">
+                    <img
+                        src="assets/images/icons/task-manager-logo.svg"
+                        class="win-icon"
+                        alt=""
+                    />
+                    <span>Windows Task Manager</span>
+                    <div class="win-controls">
+                        <button
+                            id="taskmgr-close"
+                            class="win-btn btn-close"
+                            type="button"
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+                <div class="taskmgr-tabs">
+                    <div class="taskmgr-tab active">Performance</div>
+                    <div class="taskmgr-tab">Processes</div>
+                    <div class="taskmgr-tab">Applications</div>
+                </div>
+                <div class="taskmgr-main">
+                    <div class="perf-section">
+                        <label>CPU Usage</label>
+                        <div class="graph-container">
+                            <canvas id="cpu-graph"></canvas>
+                            <span id="cpu-perc" class="graph-label">0%</span>
+                        </div>
+                    </div>
+                    <div class="perf-section">
+                        <label>Memory Usage</label>
+                        <div class="graph-container">
+                            <canvas id="mem-graph"></canvas>
+                            <span id="mem-stat" class="graph-label">0 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                id="notepad-window"
+                class="xp-window notepad-window hidden"
+                style="width: 640px"
+            >
+                <div class="win-titlebar">
+                    <img
+                        src="assets/images/icons/notepad-icon.webp"
+                        class="win-icon"
+                        alt=""
+                    />
+                    <span id="notepad-title">Untitled - Notepad</span>
+                    <div class="win-controls">
+                        <button
+                            id="notepad-close"
+                            class="win-btn btn-close"
+                            type="button"
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+                <div class="notepad-menubar" aria-label="Notepad menu">
+                    <button id="notepad-file" type="button">File</button>
+                    <button id="notepad-edit" type="button">Edit</button>
+                    <button id="notepad-word-wrap" type="button">Format</button>
+                    <button id="notepad-view" type="button">View</button>
+                    <button id="notepad-help" type="button">Help</button>
+                </div>
+                <div id="notepad-file-menu" class="notepad-dropdown hidden">
+                    <button id="notepad-new" type="button">New</button>
+                    <button id="notepad-save" type="button">Save</button>
+                </div>
+                <textarea
+                    id="notepad-textarea"
+                    class="notepad-textarea"
+                    spellcheck="false"
+                    aria-label="Notepad document"
+                ></textarea>
+                <div class="notepad-statusbar">
+                    <span id="notepad-save-status">Saved locally</span>
+                    <span id="notepad-caret-status">Ln 1, Col 1</span>
+                </div>
+                <div
+                    id="notepad-resize-handle"
+                    class="notepad-resize-handle"
+                    aria-hidden="true"
+                ></div>
+            </div>
+
+            <div id="run-dialog" class="xp-window hidden" style="width: 360px">
+                <div class="win-titlebar">
+                    <span>Run</span>
+                    <div class="win-controls">
+                        <button
+                            id="run-close"
+                            class="win-btn btn-close"
+                            type="button"
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+                <div class="win-content">
+                    <p>
+                        Type the name of a website, and Windows will open it for
+                        you.
+                    </p>
+                    <div class="field">
+                        <label for="run-input">Open:</label>
+                        <input id="run-input" type="text" autocomplete="off" />
+                    </div>
+                    <div class="win-actions">
+                        <button id="run-cancel" class="xp-btn" type="button">
+                            Cancel
+                        </button>
+                        <button id="run-ok" class="xp-btn" type="button">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="taskbar">
+                <div id="start-btn" class="start-button">
+                    <span class="start-text">start</span>
+                </div>
+                <div id="taskbar-items" class="taskbar-items">
+                    <div
+                        id="taskmgr-task-btn"
+                        class="task-item hidden"
+                        title="Task Manager"
+                    >
+                        <img
+                            src="assets/images/icons/task-manager-logo.svg"
+                            alt=""
+                        />
+                        <span>Task Manager</span>
+                    </div>
+                    <div
+                        id="notepad-task-btn"
+                        class="task-item hidden"
+                        title="Notepad"
+                    >
+                        <img
+                            src="assets/images/icons/notepad-icon.webp"
+                            alt=""
+                        />
+                        <span>Untitled - Notepad</span>
+                    </div>
+                </div>
+                <div class="tray">
+                    <div id="tray-clock" class="tray-clock">00:00 AM</div>
+                </div>
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+    </body>
+</html>
