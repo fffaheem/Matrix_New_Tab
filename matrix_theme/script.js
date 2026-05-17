@@ -19,6 +19,15 @@ let custom_default =
 ];
 
 
+const defaultSettings = {
+    themeColor: '#00FF41',
+    backgroundColor: '#000000',
+    animationSpeed: 18,
+    fontSize: 20,
+    is24HourFormat: true,
+    showSeconds: true
+};
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -286,15 +295,6 @@ const bookmarkNameInput = document.getElementById('bookmarkName');
 const bookmarkUrlInput = document.getElementById('bookmarkUrl');
 const modalTitle = document.getElementById('modalTitle');
 
-const defaultSettings = {
-    themeColor: '#00FF41',
-    backgroundColor: '#000000',
-    animationSpeed: 18,
-    fontSize: 20,
-    is24HourFormat: true,
-    showSeconds: true
-};
-
 let settings = { ...defaultSettings };
 
 function saveSettingsToStorage() {
@@ -537,6 +537,36 @@ loadDataFromStorage(() => {
     applySettings();
     renderBookmarks();
 });
+
+let modalgroupout = document.getElementById("modalgroupout")
+let groupName = modalgroupout.querySelector("#groupName")
+let groupBookmarkBtn = modalgroupout.querySelector("#groupBookmarkBtn")
+let groupicon = modalgroupout.querySelector("i");
+let modalselect = modalgroupout.querySelector("#modalselect")
+groupBookmarkBtn.addEventListener("click", (e) => {
+  modalselect.classList.toggle("modalgroupactive");
+  groupicon.classList.toggle("fa-chevron-down");
+  groupicon.classList.toggle("fa-chevron-up");
+})
+
+modalselect.querySelectorAll("li").forEach((li) => {
+  li.addEventListener("click", (e) => {
+    let v = e.target.dataset.value;
+    if (v.toLowerCase() == "none" || v.toLowerCase() == "" || v.toLowerCase() == "null") {
+      groupName.value = "";
+      groupName.disabled = false;
+      groupName.style.opacity = 1;
+      modalselect.classList.toggle("modalgroupactive");
+      groupicon.classList.toggle("fa-chevron-down");
+      groupicon.classList.toggle("fa-chevron-up");
+    } else {
+      groupName.value = e.target.dataset.value;
+      groupName.disabled = true;
+      groupName.style.opacity = 0.5;
+    }
+  })
+})
+
 
 // Start animation
 animate();
