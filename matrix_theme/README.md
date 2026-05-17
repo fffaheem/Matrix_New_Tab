@@ -120,7 +120,8 @@ You can manually edit the default bookmarks inside:
 script.js
 ```
 
-Locate the `custom_default` variable to modify bookmark entries.
+Locate the `custom_default` variable near the bottom of `script.js`
+to modify bookmark entries.
 
 
 Example:
@@ -128,8 +129,8 @@ Example:
 ```js
 let custom_default =
 [
-    { id: '1', name: 'Google', url: 'https://google.com' },
-    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
+    { id: '1', name: 'Google', url: 'https://google.com', group: "" },
+    { id: '2', name: 'YouTube', url: 'https://youtube.com', group: "" }
 ];
 ```
 

@@ -287,9 +287,12 @@ searchField.addEventListener('keypress', function (e) {
 
 // Bookmark Functionality
 const bookmarksContainer = document.getElementById('bookmarksContainer');
+const bookmarksContainerGroup = document.getElementById('bookmarksContainerGroup');
 const addBookmarkBtn = document.getElementById('addBookmarkBtn');
 const bookmarkModal = document.getElementById('bookmarkModal');
+const bookmarkgroupModal = document.getElementById('bookmarkgroupModal');
 const cancelBookmarkBtn = document.getElementById('cancelBookmarkBtn');
+const cancelBookmarkGroupBtn = document.getElementById('cancelBookmarkGroupBtn');
 const saveBookmarkBtn = document.getElementById('saveBookmarkBtn');
 const bookmarkIdInput = document.getElementById('bookmarkId');
 const bookmarkNameInput = document.getElementById('bookmarkName');
@@ -423,6 +426,7 @@ function loadDataFromStorage(callback) {
 
 function renderBookmarks() {
     // Clear existing bookmarks
+    // return
     const items = bookmarksContainer.querySelectorAll('.bookmark-item');
     items.forEach(item => item.remove());
 
@@ -442,7 +446,6 @@ function renderBookmarks() {
         let url = bookmark.url;
         let id = bookmark.id;
         let group = bookmark.group;
-
         if (group.toLowerCase() == "none" || group.toLowerCase() == "" || group.toLowerCase() == "null") {
             let a = document.createElement('a');
             a.href = url;
@@ -455,7 +458,7 @@ function renderBookmarks() {
                     <button class="delete-btn" data-id="${id}" title="Delete"><i class="fas fa-trash"></i></button>
                 </div>
             `;
-            bookmarksContainer.insertBefore(a, addBookmarkBtn);
+            bookmarksContainer.append(a);
         }
     });
 
@@ -467,15 +470,15 @@ function renderBookmarks() {
             <i class="fa fa-folder" aria-hidden="true"></i>
             <span>${grp}</span>
         `;
-        bookmarksContainer.insertBefore(div, addBookmarkBtn);
+        bookmarksContainer.append(div);
     })
 
-    // Add event listeners for edit/delete buttons
+    // Add event listeners for folder buttons
     document.querySelectorAll('.open-folder').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent navigating
             e.stopPropagation();
-            openModal(e.currentTarget.getAttribute('data-id'));
+            openModalGroup(e.currentTarget.dataset.value);
         });
     });
 
@@ -488,6 +491,68 @@ function renderBookmarks() {
         });
     });
 
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent navigating
+            e.stopPropagation();
+            deleteBookmark(e.currentTarget.getAttribute('data-id'));
+        });
+    });
+}
+
+function openModalGroup(val){
+    bookmarkgroupModal.classList.add('active');
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.get('matrix_bookmarks').then(result => {
+            if (result.matrix_bookmarks) {
+                bookmarks = result.matrix_bookmarks;
+            } else {
+                bookmarks = custom_default;
+            }
+        })
+    }else{
+        bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
+    }
+
+    let grp_arr = bookmarks.filter(g => g.group == val)
+    bookmarksContainerGroup.innerHTML = ""
+    grp_arr.forEach((bkmrk)=>{
+        let id = bkmrk.id;
+        let name = bkmrk.name;
+        let url = bkmrk.url;
+        let grp = bkmrk.group;
+
+        let a = document.createElement('a');
+        a.href = url;
+        a.className = 'bookmark-item';
+        a.innerHTML = `
+            <i class="fas fa-globe favicon"></i>
+            <span>${name}</span>
+            <div class="bookmark-actions">
+                <button class="edit-btn" data-id="${id}" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-btn" data-id="${id}" title="Delete"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+
+        bookmarksContainerGroup.append(a);
+
+
+    })
+
+    groupNameModal.dataset.value = val;
+    groupNameModal.value = val;
+    bookmarkgroupModal.classList.add('active');
+
+    // Add event listeners for edit
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent navigating
+            e.stopPropagation();
+            openModal(e.currentTarget.getAttribute('data-id'));
+        });
+    });
+
+    // Add event listeners for delete buttons
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent navigating
@@ -556,6 +621,41 @@ function closeModal() {
     bookmarkModal.classList.remove('active');
 }
 
+function closeGroupModal() {
+    bookmarkgroupModal.classList.remove('active');
+}
+
+saveBookmarkGroupBtn.addEventListener("click",(e)=>{
+    let val = groupNameModal.dataset.value;
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.local.get('matrix_bookmarks').then(result => {
+            if (result.matrix_bookmarks) {
+                bookmarks = result.matrix_bookmarks;
+            } else {
+                bookmarks = custom_default;
+            }
+        })
+    }else{
+        bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
+    }
+
+    if(!groupNameModal.value){
+        alert('Please enter Name');
+        return;
+    }
+
+    bookmarks.map((d)=>{
+        if(d.group == groupNameModal.dataset.value){
+            d.group = groupNameModal.value;
+        }
+    })
+
+    saveBookmarksToStorage();
+    renderBookmarks();
+    closeGroupModal();
+
+})
+
 function saveBookmark() {
     const id = bookmarkIdInput.value;
     const name = bookmarkNameInput.value.trim();
@@ -570,10 +670,11 @@ function saveBookmark() {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://' + url;
     }
-
+    let prev = ""
     if (id) {
         // Edit existing
         const index = bookmarks.findIndex(b => b.id === id);
+        prev = bookmarks[index].group;
         if (index !== -1) {
             bookmarks[index] = { id, name, url, group };
         }
@@ -586,7 +687,14 @@ function saveBookmark() {
     saveBookmarksToStorage();
     renderBookmarks();
     closeModal();
+
+    if([... bookmarkgroupModal.classList].includes("active")){
+        openModalGroup(prev)
+
+    }
+
 }
+
 
 function deleteBookmark(id) {
     if (confirm('Are you sure you want to delete this bookmark?')) {
@@ -598,11 +706,18 @@ function deleteBookmark(id) {
 
 addBookmarkBtn.addEventListener('click', () => openModal());
 cancelBookmarkBtn.addEventListener('click', closeModal);
+cancelBookmarkGroupBtn.addEventListener('click', closeGroupModal);
 saveBookmarkBtn.addEventListener('click', saveBookmark);
 
 bookmarkModal.addEventListener('click', (e) => {
     if (e.target === bookmarkModal) {
         closeModal();
+    }
+});
+
+bookmarkgroupModal.addEventListener('click', (e) => {
+    if (e.target === bookmarkgroupModal) {
+        closeGroupModal();
     }
 });
 
@@ -651,18 +766,14 @@ function modalopenli() {
 
 
 // custom_default =
-//   [
-//       { id: '1', name: 'Google', url: 'https://google.com', group: "" },
-//       { id: '2', name: 'YouTube', url: 'https://youtube.com', group: "" },
-//       { id: '3', name: 'Github', url: 'https://github.com/fffaheem', group: "" },
-//       { id: '4', name: 'ChatGPT', url: 'https://chatgpt.com/', group: "ai" },
-//       { id: '5', name: 'Gemini', url: 'https://gemini.google.com/app', group: "ai" },
-//       { id: '6', name: 'Grok', url: 'https://grok.com/', group: "ai" },
-//       { id: '7', name: 'Deepseek', url: 'https://chat.deepseek.com/', group: "ai" },
-//       { id: '8', name: 'Claude', url: 'https://claude.ai/new', group: "ai" }
-//   ];
+// [
+//     { id: '1', name: 'Google', url: 'https://google.com', group: "" },
+//     { id: '2', name: 'YouTube', url: 'https://youtube.com', group: "" }
+// ];
 
 // bookmarks = custom_default;
 // saveBookmarksToStorage();
+
+
 // Start animation
 animate();

@@ -12,7 +12,8 @@ body {
     background-color: var(--bg-color);
     font-family: 'Courier New', Courier, monospace;
     color: #fff;
-    display: flex;
+    /* display: flex; */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -165,12 +166,16 @@ input[type="checkbox"] {
 }
 
 .center-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*gap: 30px;*/
     gap: 1rem;
-    /* Gap between clock and login */
+
     z-index: 10;
 }
 
@@ -186,8 +191,8 @@ input[type="checkbox"] {
     letter-spacing: 2px;
     /* min-width: 220px;  */
     text-align: center;
-
-
+    left: 50%;
+    transform: translateX(-50%);
     position: absolute;
     top: 1.25rem;
     display: flex;
@@ -215,8 +220,9 @@ input[type="checkbox"] {
     align-items: center;
     gap: 25px;
     width: 100%;
-    min-width: 30rem;
-    max-width: 35rem;
+    /* min-width: 30rem; */
+    /* max-width: 35rem; */
+    width: min(40rem, 90vw);
     /*max-width: 600px;*/
     font-family: var(--ui-font);
 }
@@ -314,16 +320,43 @@ input[type="checkbox"] {
 }
 
 /* Bookmarks Styles */
+.bookmarks-section{
+    position: absolute;
+
+    top: calc(50% + 3rem);
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: min(40rem, 90vw);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    max-height: calc(100vh - (50% + 5rem));
+}
+
 .bookmarks-container {
+    overflow-y: auto;
+    padding-top: 1rem;
+    padding-right: 1rem;
+    overflow-x: hidden;
+
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 1rem;
+
     width: 100%;
-    min-width: 30rem;
-    max-width: 35rem;
-    justify-content: space-between;
-    /* margin-top: 10px; */
-    z-index: 10;
+
+    max-height: 100%;
+
+}
+
+#bookmarksContainerGroup{
+    min-height: auto;
+    max-height: 50vh;
 }
 
 .bookmark-item {
@@ -388,6 +421,9 @@ input[type="checkbox"] {
 }
 
 .add-bookmark-btn {
+    /* position: fixed; */
+    /* bottom: 0; */
+    /* right: 0; */
     background-color: transparent;
     border: 1px dashed rgba(var(--theme-color-rgb), 0.6);
     color: var(--theme-color);
@@ -397,12 +433,39 @@ input[type="checkbox"] {
     font-family: var(--ui-font);
     font-size: 1em;
     transition: all 0.3s ease;
+    width: max-content;
+    align-self: flex-end;
 }
 
 .add-bookmark-btn:hover {
     background-color: rgba(var(--theme-color-rgb), 0.1);
     border-style: solid;
     box-shadow: 0 0 10px rgba(var(--theme-color-rgb), 0.3);
+}
+
+/* Modal group */
+
+.modal-overlay-group{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(var(--bg-color-rgb), 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    /* display: flex; */
+
+    display: none;
+    opacity: 0;
+
+}
+
+.modal-overlay-group.active {
+    display: flex;
+    opacity: 1;
 }
 
 /* Modal styles */
@@ -424,6 +487,10 @@ input[type="checkbox"] {
 .modal-overlay.active {
     display: flex;
     opacity: 1;
+}
+
+#bookmarkgroupModal>.modal-content{
+    width: min(30rem, 50vw);
 }
 
 .modal-content {
