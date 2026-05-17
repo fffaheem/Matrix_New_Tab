@@ -426,19 +426,57 @@ function renderBookmarks() {
     const items = bookmarksContainer.querySelectorAll('.bookmark-item');
     items.forEach(item => item.remove());
 
+    let group_arr = bookmarks.map(gr => gr.group);
+    
+    let group_distinct = [
+        ...new Set(group_arr)
+    ].filter(group =>
+        group &&
+        group.toLowerCase() !== "none" &&
+        group.toLowerCase() !== "null"
+    );
+
+
     bookmarks.forEach(bookmark => {
-        const a = document.createElement('a');
-        a.href = bookmark.url;
-        a.className = 'bookmark-item';
-        a.innerHTML = `
-            <i class="fas fa-globe favicon"></i>
-            <span>${bookmark.name}</span>
-            <div class="bookmark-actions">
-                <button class="edit-btn" data-id="${bookmark.id}" title="Edit"><i class="fas fa-pencil-alt"></i></button>
-                <button class="delete-btn" data-id="${bookmark.id}" title="Delete"><i class="fas fa-trash"></i></button>
-            </div>
+        let n = bookmark.name;
+        let url = bookmark.url;
+        let id = bookmark.id;
+        let group = bookmark.group;
+
+        if (group.toLowerCase() == "none" || group.toLowerCase() == "" || group.toLowerCase() == "null") {
+            let a = document.createElement('a');
+            a.href = url;
+            a.className = 'bookmark-item';
+            a.innerHTML = `
+                <i class="fas fa-globe favicon"></i>
+                <span>${n}</span>
+                <div class="bookmark-actions">
+                    <button class="edit-btn" data-id="${id}" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                    <button class="delete-btn" data-id="${id}" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            bookmarksContainer.insertBefore(a, addBookmarkBtn);
+        }
+    });
+
+    group_distinct.forEach(grp=>{
+        let div = document.createElement('div');
+        div.className = 'bookmark-item open-folder';
+        div.dataset.value = grp
+        div.innerHTML = `
+            <i class="fa fa-folder" aria-hidden="true"></i>
+            <span>${grp}</span>
         `;
-        bookmarksContainer.insertBefore(a, addBookmarkBtn);
+        bookmarksContainer.insertBefore(div, addBookmarkBtn);
+    })
+
+    // Add event listeners for edit/delete buttons
+    document.querySelectorAll('.open-folder').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent navigating
+            e.stopPropagation();
+            openModal(e.currentTarget.getAttribute('data-id'));
+        });
     });
 
     // Add event listeners for edit/delete buttons
@@ -500,12 +538,12 @@ function openModal(id = null) {
     let matrix_bookmarks_arr = bookmarks.map(a => a.group)
     matrix_bookmarks_set = new Set(matrix_bookmarks_arr);
     matrix_bookmarks_arr = [...matrix_bookmarks_set]
-    let listr = ""
+    let listr = "<li data-value='none'>None</li> "
     matrix_bookmarks_arr.forEach(data => {
-        if(data.toLowerCase() == "none" || data.toLowerCase() == "" || data.toLowerCase() == "null"){
-            data = "none"
+        if (data.toLowerCase() == "none" || data.toLowerCase() == "" || data.toLowerCase() == "null") {
+        } else {
+            listr += `<li data-value="${data}">${data}</li>`
         }
-        listr += `<li data-value="${data}">${data}</li>`
     });
     modalselect.innerHTML = listr;
 
