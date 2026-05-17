@@ -13,10 +13,11 @@ let frameCount = 0;
 let bookmarks = [];
 
 let custom_default =
-[
-    { id: '1', name: 'Google', url: 'https://google.com' },
-    { id: '2', name: 'YouTube', url: 'https://youtube.com' }
-];
+    [
+        { id: '1', name: 'Google', url: 'https://google.com', group: "" },
+        { id: '2', name: 'YouTube', url: 'https://youtube.com', group: "" },
+
+    ];
 
 
 const defaultSettings = {
@@ -295,6 +296,12 @@ const bookmarkNameInput = document.getElementById('bookmarkName');
 const bookmarkUrlInput = document.getElementById('bookmarkUrl');
 const modalTitle = document.getElementById('modalTitle');
 
+let modalgroupout = document.getElementById("modalgroupout")
+let groupName = modalgroupout.querySelector("#groupName")
+let groupBookmarkBtn = modalgroupout.querySelector("#groupBookmarkBtn")
+let groupicon = modalgroupout.querySelector("i");
+let modalselect = modalgroupout.querySelector("#modalselect")
+
 let settings = { ...defaultSettings };
 
 function saveSettingsToStorage() {
@@ -397,7 +404,7 @@ function loadDataFromStorage(callback) {
             if (result.matrix_bookmarks) {
                 bookmarks = result.matrix_bookmarks;
             } else {
-              bookmarks = custom_default;
+                bookmarks = custom_default;
             }
             if (result.matrix_settings) {
                 settings = result.matrix_settings;
@@ -405,7 +412,7 @@ function loadDataFromStorage(callback) {
             callback();
         });
     } else {
-      bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
+        bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
         const savedSettings = JSON.parse(localStorage.getItem('matrix_settings'));
         if (savedSettings) {
             settings = savedSettings;
@@ -454,21 +461,57 @@ function renderBookmarks() {
 
 function openModal(id = null) {
     if (id) {
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.get('matrix_bookmarks').then(result => {
+                if (result.matrix_bookmarks) {
+                    bookmarks = result.matrix_bookmarks;
+                } else {
+                    bookmarks = custom_default;
+                }
+            })
+        } else {
+            bookmarks = JSON.parse(localStorage.getItem('matrix_bookmarks')) || custom_default;
+        }
         const bookmark = bookmarks.find(b => b.id === id);
         if (bookmark) {
             bookmarkIdInput.value = bookmark.id;
             bookmarkNameInput.value = bookmark.name;
             bookmarkUrlInput.value = bookmark.url;
+            groupName.dataset.value = bookmark.group;
+            groupName.value = bookmark.group;
+            if (groupName.value.toLowerCase() != "none" && groupName.value.toLowerCase() != "" && groupName.value.toLowerCase() != "null") {
+                groupName.disabled = true;
+                groupName.style.opacity = 0.5;
+            } else {
+                groupName.style.opacity = 1;
+                groupName.disabled = false;
+            }
             modalTitle.textContent = 'Edit Bookmark';
         }
     } else {
         bookmarkIdInput.value = '';
         bookmarkNameInput.value = '';
         bookmarkUrlInput.value = '';
+        groupName.dataset.value = '';
+        groupName.value = '';
         modalTitle.textContent = 'Add Bookmark';
     }
+
+    let matrix_bookmarks_arr = bookmarks.map(a => a.group)
+    matrix_bookmarks_set = new Set(matrix_bookmarks_arr);
+    matrix_bookmarks_arr = [...matrix_bookmarks_set]
+    let listr = ""
+    matrix_bookmarks_arr.forEach(data => {
+        if(data.toLowerCase() == "none" || data.toLowerCase() == "" || data.toLowerCase() == "null"){
+            data = "none"
+        }
+        listr += `<li data-value="${data}">${data}</li>`
+    });
+    modalselect.innerHTML = listr;
+
     bookmarkModal.classList.add('active');
     bookmarkNameInput.focus();
+    modalopenli();
 }
 
 function closeModal() {
@@ -479,6 +522,7 @@ function saveBookmark() {
     const id = bookmarkIdInput.value;
     const name = bookmarkNameInput.value.trim();
     let url = bookmarkUrlInput.value.trim();
+    let group = groupName.value.trim();
 
     if (!name || !url) {
         alert('Please enter both name and URL');
@@ -493,12 +537,12 @@ function saveBookmark() {
         // Edit existing
         const index = bookmarks.findIndex(b => b.id === id);
         if (index !== -1) {
-            bookmarks[index] = { id, name, url };
+            bookmarks[index] = { id, name, url, group };
         }
     } else {
         // Add new
         const newId = Date.now().toString();
-        bookmarks.push({ id: newId, name, url });
+        bookmarks.push({ id: newId, name, url, group });
     }
 
     saveBookmarksToStorage();
@@ -538,35 +582,49 @@ loadDataFromStorage(() => {
     renderBookmarks();
 });
 
-let modalgroupout = document.getElementById("modalgroupout")
-let groupName = modalgroupout.querySelector("#groupName")
-let groupBookmarkBtn = modalgroupout.querySelector("#groupBookmarkBtn")
-let groupicon = modalgroupout.querySelector("i");
-let modalselect = modalgroupout.querySelector("#modalselect")
 groupBookmarkBtn.addEventListener("click", (e) => {
-  modalselect.classList.toggle("modalgroupactive");
-  groupicon.classList.toggle("fa-chevron-down");
-  groupicon.classList.toggle("fa-chevron-up");
-})
-
-modalselect.querySelectorAll("li").forEach((li) => {
-  li.addEventListener("click", (e) => {
-    let v = e.target.dataset.value;
-    if (v.toLowerCase() == "none" || v.toLowerCase() == "" || v.toLowerCase() == "null") {
-      groupName.value = "";
-      groupName.disabled = false;
-      groupName.style.opacity = 1;
-      modalselect.classList.toggle("modalgroupactive");
-      groupicon.classList.toggle("fa-chevron-down");
-      groupicon.classList.toggle("fa-chevron-up");
-    } else {
-      groupName.value = e.target.dataset.value;
-      groupName.disabled = true;
-      groupName.style.opacity = 0.5;
-    }
-  })
+    modalselect.classList.toggle("modalgroupactive");
+    groupicon.classList.toggle("fa-chevron-down");
+    groupicon.classList.toggle("fa-chevron-up");
 })
 
 
+function modalopenli() {
+    modalselect.querySelectorAll("li").forEach((li) => {
+        li.addEventListener("click", (e) => {
+            let v = e.target.dataset.value;
+            if (v.toLowerCase() == "none" || v.toLowerCase() == "" || v.toLowerCase() == "null") {
+                groupName.value = "";
+                groupName.dataset.value = "";
+                groupName.disabled = false;
+                groupName.style.opacity = 1;
+                modalselect.classList.toggle("modalgroupactive");
+                groupicon.classList.toggle("fa-chevron-down");
+                groupicon.classList.toggle("fa-chevron-up");
+            } else {
+                groupName.value = e.target.dataset.value;
+                groupName.dataset.value = e.target.dataset.value;
+                groupName.disabled = true;
+                groupName.style.opacity = 0.5;
+            }
+        })
+    })
+}
+
+
+// custom_default =
+//   [
+//       { id: '1', name: 'Google', url: 'https://google.com', group: "" },
+//       { id: '2', name: 'YouTube', url: 'https://youtube.com', group: "" },
+//       { id: '3', name: 'Github', url: 'https://github.com/fffaheem', group: "" },
+//       { id: '4', name: 'ChatGPT', url: 'https://chatgpt.com/', group: "ai" },
+//       { id: '5', name: 'Gemini', url: 'https://gemini.google.com/app', group: "ai" },
+//       { id: '6', name: 'Grok', url: 'https://grok.com/', group: "ai" },
+//       { id: '7', name: 'Deepseek', url: 'https://chat.deepseek.com/', group: "ai" },
+//       { id: '8', name: 'Claude', url: 'https://claude.ai/new', group: "ai" }
+//   ];
+
+// bookmarks = custom_default;
+// saveBookmarksToStorage();
 // Start animation
 animate();
